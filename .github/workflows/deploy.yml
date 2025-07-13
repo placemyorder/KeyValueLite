@@ -1,4 +1,4 @@
-name: Build and Publish NuGet Package
+ame: Build and Publish NuGet Package
 
 on:
   push:
