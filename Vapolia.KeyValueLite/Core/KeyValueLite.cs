@@ -15,12 +15,12 @@ namespace Vapolia.KeyValueLite.Core
         private readonly IKeyValueItemSerializer serializer;
 
         [Preserve(Conditional = true)]
-        public KeyValueLite(IDataStoreFactory dsFactory, IKeyValueItemSerializer serializer, ILogger logger, string appName = nameof(KeyValueLite))
+        public KeyValueLite(IDataStoreFactory dsFactory, IKeyValueItemSerializer serializer, ILogger logger)
         {
             syncer = new Syncer(logger);
             this.serializer = serializer;
          
-            var datastore = dsFactory.CreateDataStore(appName);
+            var datastore = dsFactory.CreateDataStore(DataStoreName.DbName ?? "KeyValueLite.db");
             db = new KeyValueDbContext(datastore, logger);
             KeyValueDbContext.InitDb(db);
         }
