@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapolia.KeyValueLite", "Vapolia.KeyValueLite\Vapolia.KeyValueLite.csproj", "{C8CC6227-C2CC-4325-BA17-3FDCF46E25E0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapolia.KeyValueLite.Core", "Vapolia.KeyValueLite.Core\Vapolia.KeyValueLite.Core.csproj", "{F5BC8CD3-C2C0-4222-A1B1-74A7508BA73E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapolia.KeyValueLite.Tests", "Vapolia.KeyValueLite.Tests\Vapolia.KeyValueLite.Tests.csproj", "{A5E13D61-9B64-47F5-8CB3-1F4E649D999C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{979884A7-AAE8-4A81-9BFA-4F5B0EA43A6F}"
@@ -14,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{979884
 		nuget\pack.ps1 = nuget\pack.ps1
 		README.md = README.md
 		nuget\vapolia-keyvaluelite.nuspec = nuget\vapolia-keyvaluelite.nuspec
-		nuget\version.txt = nuget\version.txt
 	EndProjectSection
 EndProject
 Global
@@ -27,10 +24,6 @@ Global
 		{C8CC6227-C2CC-4325-BA17-3FDCF46E25E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8CC6227-C2CC-4325-BA17-3FDCF46E25E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8CC6227-C2CC-4325-BA17-3FDCF46E25E0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5BC8CD3-C2C0-4222-A1B1-74A7508BA73E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5BC8CD3-C2C0-4222-A1B1-74A7508BA73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5BC8CD3-C2C0-4222-A1B1-74A7508BA73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5BC8CD3-C2C0-4222-A1B1-74A7508BA73E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A5E13D61-9B64-47F5-8CB3-1F4E649D999C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A5E13D61-9B64-47F5-8CB3-1F4E649D999C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5E13D61-9B64-47F5-8CB3-1F4E649D999C}.Release|Any CPU.ActiveCfg = Release|Any CPU

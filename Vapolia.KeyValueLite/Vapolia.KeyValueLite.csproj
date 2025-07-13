@@ -2,14 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Title>PlaceMyOrder Vapolia KeyValueLite</Title>
+    <Authors>Benjamin Mayrargue,PlaceMyOrder</Authors>
+    <owners>Benjamin Mayrargue,PlaceMyOrder</owners>
+    <PackageId>placemyorder-vapolia-keyvaluelite</PackageId>
+    <Company>Place My Orders</Company>
+    <RepositoryUrl>https://github.com/placemyorder/KeyValueLite</RepositoryUrl>
+    <RepositoryType>Public</RepositoryType>
+    <Description>A netstandard key value store, backed by sqlite, alternative to Akavache</Description>
+    <License>https://github.com/placemyorder/KeyValueLite</License>
+    <PackageTags>keyvalue store sqlite xamarin win32 uwp akavache</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.7" />
+    <PackageReference Include="sqlite-net2" Version="2.2.0" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
     <PackageReference Include="System.Text.Json" Version="9.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Vapolia.KeyValueLite.Core\Vapolia.KeyValueLite.Core.csproj" />
   </ItemGroup>
 
 </Project>

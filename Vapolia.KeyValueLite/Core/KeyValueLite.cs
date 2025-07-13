@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Vapolia.KeyValueLite.Core
 {
-    public class KeyValueLite : IDisposable
+    public class KeyValueLite : IKeyValueLite
     {
         private readonly KeyValueDbContext db;
         private readonly SemaphoreSlim syncDb = new SemaphoreSlim(1);
@@ -15,12 +15,12 @@ namespace Vapolia.KeyValueLite.Core
         private readonly IKeyValueItemSerializer serializer;
 
         [Preserve(Conditional = true)]
-        public KeyValueLite(IDataStoreFactory dsFactory, IKeyValueItemSerializer serializer, ILogger logger)
+        public KeyValueLite(IDataStoreFactory dsFactory, IKeyValueItemSerializer serializer, ILogger logger, string appName = nameof(KeyValueLite))
         {
             syncer = new Syncer(logger);
             this.serializer = serializer;
          
-            var datastore = dsFactory.CreateDataStore(nameof(KeyValueLite));
+            var datastore = dsFactory.CreateDataStore(appName);
             db = new KeyValueDbContext(datastore, logger);
             KeyValueDbContext.InitDb(db);
         }
