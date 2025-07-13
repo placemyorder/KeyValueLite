@@ -1,12 +1,13 @@
 # Ensure script fails on errors
 $ErrorActionPreference = "Stop"
 
-# Move to the repo root
-cd $PSScriptRoot
-cd ..
+# Get absolute path to the repo root (one level up from script location)
+$repoRoot = Resolve-Path "$PSScriptRoot\.."
 
-# Read version from version.txt (must be in the same directory as the script or provide path)
-$versionFile = Join-Path $PSScriptRoot "version.txt"
+# Path to version.txt in the root
+$versionFile = Join-Path $repoRoot "version.txt"
+
+# Validate and read version
 if (!(Test-Path $versionFile)) {
     throw "version.txt file not found at $versionFile"
 }
@@ -17,7 +18,7 @@ if (-not $version) {
 
 # Define other variables
 $nugetServer = "https://api.nuget.org/v3/index.json"
-$solutionFile = "Vapolia.KeyValueLite.sln"
+$solutionFile = Join-Path $repoRoot "Vapolia.KeyValueLite.sln"
 $nuspecFile = "Vapolia-KeyValueLite.nuspec"
 $packageName = "PlaceMyOrder-Vapolia-KeyValueLite.$version.nupkg"
 
@@ -27,14 +28,13 @@ dotnet restore $solutionFile
 # Build the solution
 dotnet build $solutionFile --configuration Release --no-restore
 
-# Navigate to NuGet folder
-cd .\nuget
+# Clean old nupkg files
+Remove-Item "$PSScriptRoot\*.nupkg" -ErrorAction SilentlyContinue
 
-# Clean up any old packages
-Remove-Item *.nupkg -ErrorAction SilentlyContinue
-
-# Pack the NuGet package
+# Pack the NuGet package (runs from the nuget/ folder where .nuspec lives)
+Push-Location $PSScriptRoot
 nuget pack $nuspecFile -Version $version
+Pop-Location
 
-# Push the NuGet package using GitHub secret API key
-nuget push $packageName -Source $nugetServer -ApiKey $env:NUGET_API_KEY
+# Push the NuGet package
+nuget push "$PSScriptRoot\$packageName" -Source $nugetServer -ApiKey $env:NUGET_API_KEY
