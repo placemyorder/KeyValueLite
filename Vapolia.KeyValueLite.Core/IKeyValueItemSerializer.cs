@@ -1,4 +1,4 @@
-﻿namespace Vapolia.KeyValueLite
+﻿namespace Vapolia.KeyValueLite.Core
 {
     public interface IKeyValueItemSerializer
     {

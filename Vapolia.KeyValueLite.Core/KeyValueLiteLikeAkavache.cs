@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
-namespace Vapolia.KeyValueLite
+namespace Vapolia.KeyValueLite.Core
 {
-    public class KeyValueLiteLikeAkavache
+    public class KeyValueLiteLikeAkavache : IKeyValueLiteLikeAkavache
     {
         private readonly KeyValueLite kvLite;
 
@@ -34,7 +34,7 @@ namespace Vapolia.KeyValueLite
             => await kvLite.GetAll<T>();
 
         public async Task InsertObjects<T>(Dictionary<string, T> keyValuePairs, [CallerMemberName]string caller = null) 
-            => await kvLite.InsertObjects<T>(keyValuePairs);
+            => await kvLite.InsertObjects(keyValuePairs);
 
         public async Task InvalidateAllObjects<T>([CallerMemberName]string caller = null) 
             => await kvLite.RemoveAll<T>();

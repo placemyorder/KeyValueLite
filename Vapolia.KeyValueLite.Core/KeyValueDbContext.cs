@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SQLite.Net2;
 
-namespace Vapolia.KeyValueLite
+namespace Vapolia.KeyValueLite.Core
 {
     internal class KeyValueDbContext : DbContextBase<KeyValueDbContext>
     {

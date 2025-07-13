@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Vapolia.KeyValueLite
+namespace Vapolia.KeyValueLite.Core
 {
     /// <summary>
     /// Equality comparison based on the key and value of a KeyValueItem.

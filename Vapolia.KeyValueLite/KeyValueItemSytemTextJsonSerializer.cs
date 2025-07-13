@@ -1,4 +1,6 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Vapolia.KeyValueLite.Core;
 
 namespace Vapolia.KeyValueLite
 {
@@ -8,7 +10,7 @@ namespace Vapolia.KeyValueLite
 
         private readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions
         {
-            IgnoreNullValues = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNameCaseInsensitive = true,
         };
 

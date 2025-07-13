@@ -1,6 +1,6 @@
 ﻿using SQLite.Net2;
 
-namespace Vapolia.KeyValueLite
+namespace Vapolia.KeyValueLite.Core
 {
     public class DbMeta
     {

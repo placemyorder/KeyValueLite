@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Vapolia.KeyValueLite
+namespace Vapolia.KeyValueLite.Core
 {
     public class DataStoreFactory : IDataStoreFactory
     {
