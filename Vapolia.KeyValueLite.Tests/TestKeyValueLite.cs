@@ -8,21 +8,21 @@ namespace Vapolia.KeyValueLite.Tests
     [TestClass]
     public class TestKeyValueLite
     {
-        private KeyValueLite cacheService;
+        private Core.KeyValueLite cacheService;
 
         [TestInitialize]
         public void TestInit()
         {
             SQLitePCL.Batteries_V2.Init();
             var loggerFactory = new Microsoft.Extensions.Logging.LoggerFactory();
-            var logger = loggerFactory.CreateLogger(nameof(KeyValueLite));
+            var logger = loggerFactory.CreateLogger(nameof(Core.KeyValueLite));
 
             //Clear db
             //var dbPath = dsFactory.GetDataStorePathName(nameof(KeyValueLite));
             //File.Delete(dbPath);
 
             var dsFactory = new DataStoreFactory(new GenericPlatformService());
-            cacheService = new KeyValueLite(dsFactory, new KeyValueItemSytemTextJsonSerializer(), logger);
+            cacheService = new Core.KeyValueLite(dsFactory, new KeyValueItemSytemTextJsonSerializer(), logger);
         }
 
         [TestMethod]

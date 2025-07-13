@@ -1,7 +1,6 @@
 ﻿using System;
-using Vapolia.KeyValueLite;
 
-namespace Vapolia.KeyValueLite
+namespace Vapolia.KeyValueLite.Core
 {
     [AttributeUsage(System.AttributeTargets.All)]
     internal sealed class PreserveAttribute : Attribute

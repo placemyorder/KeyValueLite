@@ -8,30 +8,21 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using SQLite.Net2;
 
-namespace Vapolia.KeyValueLite
+namespace Vapolia.KeyValueLite.Core
 {
     public interface IDataStore
     {
         string DatabaseFilePathName { get; }
     }
 
-    //internal interface IDbContextBuilder<TDbContext, TDataStore>
-    //    where TDataStore : class, IDataStore
-    //    where TDbContext : DbContextBase<TDbContext, TDataStore>, IDbContextBuilder<TDbContext, TDataStore>
-    //{
-    //    DbContextBase<TDbContext, TDataStore> CreateDbContext();
-    //}
-
     public abstract class DbContextBase<TDbContext> : SQLiteConnection
-        where TDbContext : DbContextBase<TDbContext> //, IDbContextBuilder<TDbContext, TDataStore>
+        where TDbContext : DbContextBase<TDbContext> 
     {
         private const string AppVersionKey = "appVersion";
         private const string OsVersionKey = "osVersion";
         private const string SchemaVersionKey = "schemaVersion";
         private const string SetWalMode = "PRAGMA journal_mode = WAL;";
         private readonly ILogger log;
-
-        //private readonly IDataStore dataStore;
 
         /// <summary>
         /// After any change to db schema, you should increase CurrentSchemaVersion, 
@@ -63,9 +54,7 @@ namespace Vapolia.KeyValueLite
         /// </summary>
         protected DbContextBase(IDataStore dataStore, ILogger logger) : base(
             dataStore.DatabaseFilePathName,
-            SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.NoMutex
-            //Protection flag required for db access when device is locked
-            | SQLiteOpenFlags.ProtectionCompleteUntilFirstUserAuthentication)
+            SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.NoMutex)
         {
             log = logger;
             //this.dataStore = dataStore;
@@ -203,23 +192,8 @@ namespace Vapolia.KeyValueLite
             this.CreateTableIfNotExist<DbMeta>();
             var schemaVersion = new DbMeta { Key = SchemaVersionKey, Value = CurrentSchemaVersion.ToString(CultureInfo.InvariantCulture) };
             Insert(schemaVersion);
-            //Insert(currentAppVersion);
-            //Insert(currentOsVersion);
             CreateUserTables(this);
         }
-
-
-        //private void ResetDatabase()
-        //{
-        //    //Drop all tables
-        //    const string alltablesQuery = "select 'drop table ' || name || ';' from sqlite_master where type = 'table'";
-        //    var droptablesQuery = ExecuteSimpleQuery<string>(alltablesQuery)
-        //        .Where(s => !s.StartsWith("drop table sqlite"))
-        //        .ToList();
-        //    foreach (var dropTableQuery in droptablesQuery)
-        //        Execute(dropTableQuery);
-        //    InitDb();
-        //}
 
         protected override void Dispose(bool disposing)
         {

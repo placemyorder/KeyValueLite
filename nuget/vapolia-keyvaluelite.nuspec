@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata minClientVersion="2.5">
-    <id>vapolia-keyvaluelite</id>
+    <id>placemyorder-vapolia-keyvaluelite</id>
     <version>1.0.0</version>
-    <title>KeyValue Lite</title>
-    <authors>Benjamin Mayrargue</authors>
+    <title>PlaceMyOrder KeyValue Lite</title>
+    <authors>Benjamin Mayrargue,PlaceMyOrder</authors>
     <owners>Benjamin Mayrargue</owners>
 
     <projectUrl>https://github.com/softlion/KeyValueLite</projectUrl>
@@ -20,9 +20,9 @@
     <summary>A netstandard key value store, backed by sqlite, alternative to Akavache</summary>
 
     <dependencies>
-      <dependency id="sqlite-net2" version="2.0.0" />
-      <dependency id="System.Text.Json" version="4.6.0" />
-      <dependency id="Microsoft.Extensions.Logging.Abstractions" version="3.0.0" />
+      <dependency id="sqlite-net2" version="2.2.0" />
+      <dependency id="System.Text.Json" version="9.0.7" />
+      <dependency id="Microsoft.Extensions.Logging.Abstractions" version="9.0.7" />
     </dependencies>
 
   </metadata>

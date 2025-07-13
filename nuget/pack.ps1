@@ -10,7 +10,7 @@ $msbuild = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBui
 
 #####################
 #Build release config
-$version="3.0.1"
+$version="4.0.0"
 $msbuildparams = '/t:Clean;Build', '/p:Configuration=Release', '/p:Platform=Any CPU', 'Vapolia.KeyValueLite.sln'
 
 cd $PSScriptRoot
@@ -22,4 +22,4 @@ cd nuget
 del *.nupkg
 
 nuget pack "Vapolia-KeyValueLite.nuspec" -Version $version
-nuget push "Vapolia-KeyValueLite.$version.nupkg" -Source $nugetServer
+nuget push "PlaceMyOrder-Vapolia-KeyValueLite.$version.nupkg" -Source $nugetServer
