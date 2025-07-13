@@ -1,0 +1,56 @@
+ame: Build and Publish NuGet Package
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Install NuGet CLI
+        uses: nuget/setup-nuget@v1
+
+      - name: Get merge source branch
+        id: branch
+        run: |
+          echo "##[group]Detecting source branch"
+          MERGE_BRANCH=$(git log -1 --pretty=%B | grep -oE '(feature|bug|release)/[^ ]+')
+          echo "Detected source branch: $MERGE_BRANCH"
+          echo "branch=$MERGE_BRANCH" >> $GITHUB_OUTPUT
+          echo "##[endgroup]"
+
+      - name: Autoincrement version
+        uses: placemyorder/autoincrementversion@v1.1.0
+        with:
+          branch: ${{ steps.branch.outputs.branch }}
+          versionfile: version.txt
+
+      - name: Print updated version
+        run: cat version.txt
+
+      - name: Build and publish NuGet package
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGETTOKEN }}
+        run: pwsh ./nuget/pack.ps1
+
+      - name: Commit updated version.txt
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add version.txt
+          git commit -m "chore: bump version.txt [skip ci]" || echo "No changes to commit"
+          git push
