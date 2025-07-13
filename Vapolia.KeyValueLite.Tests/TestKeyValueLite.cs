@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Vapolia.KeyValueLite.Core;
 
 namespace Vapolia.KeyValueLite.Tests
@@ -14,8 +15,8 @@ namespace Vapolia.KeyValueLite.Tests
         public void TestInit()
         {
             SQLitePCL.Batteries_V2.Init();
-            var loggerFactory = new Microsoft.Extensions.Logging.LoggerFactory();
-            var logger = loggerFactory.CreateLogger(nameof(Core.KeyValueLite));
+            var loggerFactory = new LoggerFactory();
+            var logger = loggerFactory.CreateLogger<Core.KeyValueLite>();
 
             //Clear db
             //var dbPath = dsFactory.GetDataStorePathName(nameof(KeyValueLite));
