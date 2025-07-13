@@ -1,40 +1,18 @@
-# Ensure script fails on errors
-$ErrorActionPreference = "Stop"
+$baseDir = (Get-Item $PSScriptRoot).Parent.FullName
 
-# Get absolute path to the repo root (one level up from script location)
-$repoRoot = Resolve-Path "$PSScriptRoot\.."
+$versionFile = [IO.Path]::Combine($baseDir,'version.txt')
+$releasefolder = [IO.Path]::Combine($baseDir,'Vapolia.KeyValueLite','bin','Release')
 
-# Path to version.txt in the root
-$versionFile = Join-Path $repoRoot "version.txt"
+Set-Location $baseDir
 
-# Validate and read version
-if (!(Test-Path $versionFile)) {
-    throw "version.txt file not found at $versionFile"
-}
-$version = Get-Content $versionFile | Select-Object -First 1
-if (-not $version) {
-    throw "version.txt is empty or invalid"
-}
+$version = Get-Content $versionFile
 
-# Define other variables
-$nugetServer = "https://api.nuget.org/v3/index.json"
-$solutionFile = Join-Path $repoRoot "Vapolia.KeyValueLite.sln"
-$nuspecFile = "Vapolia-KeyValueLite.nuspec"
-$packageName = "PlaceMyOrder-Vapolia-KeyValueLite.$version.nupkg"
+dotnet build --configuration Release
 
-# Restore NuGet packages
-dotnet restore $solutionFile
+dotnet test
 
-# Build the solution
-dotnet build $solutionFile --configuration Release --no-restore
+dotnet pack --configuration Release /p:Version=$version
 
-# Clean old nupkg files
-Remove-Item "$PSScriptRoot\*.nupkg" -ErrorAction SilentlyContinue
+Set-Location $releasefolder
 
-# Pack the NuGet package (runs from the nuget/ folder where .nuspec lives)
-Push-Location $PSScriptRoot
-nuget pack $nuspecFile -Version $version
-Pop-Location
-
-# Push the NuGet package
-nuget push "$PSScriptRoot\$packageName" -Source $nugetServer -ApiKey $env:NUGET_API_KEY
+dotnet nuget push *.nupkg -k $env:NUGET_API_KEY -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
