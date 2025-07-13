@@ -1,25 +1,40 @@
-######NuGet.CommandLine is too old and does not support Xamarin.iOS libs
-#####Please install the package "NuGe t.CommandLine" from https://chocolatey.org/ before running this script
-#####After chocolatey is installed, type: choco install NuGet.CommandLine
-#####Before running this script, download nuget.exe from @echo https://nuget.codeplex.com/releases/view/133091
-#####and put nuget.exe in the path.
+# Ensure script fails on errors
+$ErrorActionPreference = "Stop"
 
-#####set /p nugetServer=Enter base nuget server url (with /): 
-$nugetServer="https://www.nuget.org"
-$msbuild = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe'
-
-#####################
-#Build release config
-$version="4.0.0"
-$msbuildparams = '/t:Clean;Build', '/p:Configuration=Release', '/p:Platform=Any CPU', 'Vapolia.KeyValueLite.sln'
-
+# Move to the repo root
 cd $PSScriptRoot
 cd ..
-nuget restore
-& $msbuild $msbuildparams
-cd nuget
 
-del *.nupkg
+# Read version from version.txt (must be in the same directory as the script or provide path)
+$versionFile = Join-Path $PSScriptRoot "version.txt"
+if (!(Test-Path $versionFile)) {
+    throw "version.txt file not found at $versionFile"
+}
+$version = Get-Content $versionFile | Select-Object -First 1
+if (-not $version) {
+    throw "version.txt is empty or invalid"
+}
 
-nuget pack "Vapolia-KeyValueLite.nuspec" -Version $version
-nuget push "PlaceMyOrder-Vapolia-KeyValueLite.$version.nupkg" -Source $nugetServer
+# Define other variables
+$nugetServer = "https://api.nuget.org/v3/index.json"
+$solutionFile = "Vapolia.KeyValueLite.sln"
+$nuspecFile = "Vapolia-KeyValueLite.nuspec"
+$packageName = "PlaceMyOrder-Vapolia-KeyValueLite.$version.nupkg"
+
+# Restore NuGet packages
+dotnet restore $solutionFile
+
+# Build the solution
+dotnet build $solutionFile --configuration Release --no-restore
+
+# Navigate to NuGet folder
+cd .\nuget
+
+# Clean up any old packages
+Remove-Item *.nupkg -ErrorAction SilentlyContinue
+
+# Pack the NuGet package
+nuget pack $nuspecFile -Version $version
+
+# Push the NuGet package using GitHub secret API key
+nuget push $packageName -Source $nugetServer -ApiKey $env:NUGET_API_KEY
