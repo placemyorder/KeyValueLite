@@ -15,12 +15,15 @@ namespace Vapolia.KeyValueLite.Core
         private readonly IKeyValueItemSerializer serializer;
 
         [Preserve(Conditional = true)]
-        public KeyValueLite(IDataStoreFactory dsFactory, IKeyValueItemSerializer serializer, ILogger logger)
+        public KeyValueLite(IDataStoreFactory dsFactory, IKeyValueItemSerializer serializer,
+            ILogger<KeyValueLite> logger)
         {
             syncer = new Syncer(logger);
             this.serializer = serializer;
-         
-            var datastore = dsFactory.CreateDataStore(DataStoreName.DbName ?? "KeyValueLite.db");
+
+            var datastore = dsFactory.CreateDataStore(string.IsNullOrWhiteSpace(DataStoreName.DbName)
+                ? nameof(KeyValueLite)
+                : DataStoreName.DbName);
             db = new KeyValueDbContext(datastore, logger);
             KeyValueDbContext.InitDb(db);
         }
@@ -59,7 +62,7 @@ namespace Vapolia.KeyValueLite.Core
             if (kp == null)
             {
                 value = create();
-                if(value != null)
+                if (value != null)
                     await Set(key, value).ConfigureAwait(false);
             }
             else
@@ -70,7 +73,8 @@ namespace Vapolia.KeyValueLite.Core
             return value;
         }
 
-        public virtual async Task<T> GetOrFetchObject<T>(string key, Func<Task<T>> create, DateTimeOffset? expiresOn = null)
+        public virtual async Task<T> GetOrFetchObject<T>(string key, Func<Task<T>> create,
+            DateTimeOffset? expiresOn = null)
         {
             T value;
 
@@ -78,7 +82,7 @@ namespace Vapolia.KeyValueLite.Core
             if (kp == null)
             {
                 value = await create();
-                if(value != null)
+                if (value != null)
                     await Set(key, value).ConfigureAwait(false);
             }
             else
@@ -88,7 +92,6 @@ namespace Vapolia.KeyValueLite.Core
 
             return value;
         }
-
 
 
         /// <summary>
@@ -100,7 +103,7 @@ namespace Vapolia.KeyValueLite.Core
         public virtual async Task<T> Get<T>(string key)
         {
             var kp = await Get(key).ConfigureAwait(false);
-            if(kp == null)
+            if (kp == null)
                 return default;
             return serializer.GetValue<T>(kp);
         }
@@ -117,7 +120,7 @@ namespace Vapolia.KeyValueLite.Core
                     .Select(kv => kv.Key)
                     .ToList();
                 db.DeleteIn<KeyValueItem>(expiredItemIds);
-        
+
                 return db.Table<KeyValueItem>()
                     .Where(kv => kv.ValueType == valueType)
                     .Select(kv => kv.Value)
@@ -169,13 +172,15 @@ namespace Vapolia.KeyValueLite.Core
         /// <param name="expiresOn">The expire date after which this key is no longer valid.</param>
         public virtual Task Set(string key, object value, DateTimeOffset? expiresOn = null)
         {
-            var keyValueItem = new KeyValueItem(key, serializer.SerializeToString(value), value?.GetType().FullName, expiresOn);
+            var keyValueItem = new KeyValueItem(key, serializer.SerializeToString(value), value?.GetType().FullName,
+                expiresOn);
             return Set(keyValueItem);
         }
 
         public async Task InsertObjects<T>(Dictionary<string, T> keyValuePairs, DateTimeOffset? expiresOn = null)
         {
-            var kps = keyValuePairs.Select(kp => new KeyValueItem(kp.Key, serializer.SerializeToString(kp.Value), kp.Value?.GetType().FullName, expiresOn)).ToList();
+            var kps = keyValuePairs.Select(kp => new KeyValueItem(kp.Key, serializer.SerializeToString(kp.Value),
+                kp.Value?.GetType().FullName, expiresOn)).ToList();
             using (await syncer.Wait(syncDb).ConfigureAwait(false))
             {
                 db.InsertOrReplaceAll(kps);
@@ -204,7 +209,7 @@ namespace Vapolia.KeyValueLite.Core
             {
                 var itemKey = db.Table<KeyValueItem>().Where(kp => kp.Key == key).Select(kp => kp.Key).FirstOrDefault();
                 if (itemKey != null)
-                    db.Delete<KeyValueItem>(new [] {itemKey});
+                    db.Delete<KeyValueItem>(new[] { itemKey });
             }
         }
 

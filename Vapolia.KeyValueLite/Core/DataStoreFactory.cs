@@ -19,13 +19,16 @@ namespace Vapolia.KeyValueLite.Core
 
         public virtual string GetDataStorePathName(string dataStoreName)
         {
-            switch (dataStoreName)
+            if (string.IsNullOrWhiteSpace(dataStoreName))
             {
-                case nameof(KeyValueLite):
-                    return "keyvaluecache.db";
-                default:
-                    throw new ArgumentException("Unknown data store, or not implemented", nameof(dataStoreName));
+                throw new ArgumentException("Unknown data store, or not implemented", nameof(dataStoreName));
             }
+
+            return dataStoreName switch
+            {
+                nameof(KeyValueLite) => "keyvaluecache.db",
+                _ => dataStoreName
+            };
         }
 
         protected virtual string GetDbPathNameForCurrentUser(string dbName)
