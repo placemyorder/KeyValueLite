@@ -12,25 +12,16 @@ namespace Vapolia.KeyValueLite
         {
             // Init SQLite
             Batteries_V2.Init();
-
+            DataStoreName.DbName = appName;
             // Register logger factory if not already registered
             services.AddLogging();
 
             // Register platform services and data store factory
             services.AddSingleton<IPlatformService, GenericPlatformService>();
             services.AddSingleton<IDataStoreFactory, DataStoreFactory>();
-
-
+            services.AddSingleton<IKeyValueItemSerializer, KeyValueItemSytemTextJsonSerializer>();
             // Register KeyValueLite as a singleton, resolving dependencies from DI
-            services.AddSingleton<IKeyValueLite,Core.KeyValueLite>(sp =>
-            {
-                var platformService = sp.GetRequiredService<IPlatformService>();
-                var dsFactory = new DataStoreFactory(platformService);
-                var serializer = sp.GetRequiredService<IKeyValueItemSerializer>();
-                var logger = sp.GetRequiredService<ILogger<Core.KeyValueLite>>();
-                return new Core.KeyValueLite(dsFactory, serializer, logger, appName);
-            });
-
+            services.AddSingleton<IKeyValueLite,Core.KeyValueLite>();
             services.AddSingleton<IKeyValueLiteLikeAkavache, KeyValueLiteLikeAkavache>();
 
             return services;
