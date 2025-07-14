@@ -22,20 +22,11 @@ MIT License
 Add the nuget to your netstandard project  
 [![NuGet](https://img.shields.io/nuget/v/vapolia-keyvaluelite.svg?style=plastic)](https://www.nuget.org/packages/vapolia-keyvaluelite/)
 
-Initialization code to get the `cacheService` singleton instance:
+Initialization code is below. You will need to either use GenericPlatformService or spinout your own platform service. After that call the `AddKeyValueLite` method to register the key value store in your dependency injection container.
 
 ```csharp
-//Init SQLite
-SQLitePCL.Batteries_V2.Init();
-
-//Use an already existing logger factory, or create a new one with this code:
-var loggerFactory = new Microsoft.Extensions.Logging.LoggerFactory();
-var logger = loggerFactory.CreateLogger(nameof(KeyValueLite));
-
-//Create the cacheService using the sqlite database path provided by the DataStoreFactory class 
-//Note: you can provide your own IDataStoreFactory implementation.
-var dsFactory = new DataStoreFactory(new GenericPlatformService());
-cacheService = new KeyValueLite(dsFactory, new KeyValueItemNewtonsoftJsonSerializer(), logger);
+builder.Services.AddSingleton<IPlatformService, GenericPlatformService>();
+builder.Services.AddKeyValueLite("mydbname");
 ```
 
 # Usage
