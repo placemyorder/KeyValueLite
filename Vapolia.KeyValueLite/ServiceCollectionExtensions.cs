@@ -17,7 +17,6 @@ namespace Vapolia.KeyValueLite
             services.AddLogging();
 
             // Register platform services and data store factory
-            services.AddSingleton<IPlatformService, GenericPlatformService>();
             services.AddSingleton<IDataStoreFactory, DataStoreFactory>();
             services.AddSingleton<IKeyValueItemSerializer, KeyValueItemSytemTextJsonSerializer>();
             // Register KeyValueLite as a singleton, resolving dependencies from DI
